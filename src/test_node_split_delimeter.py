@@ -27,7 +27,6 @@ class TestTextNode(unittest.TestCase):
             [
                 TextNode("This is a ", TextType.PLAIN_TEXT),
                 TextNode("FIRST_BLOCK", TextType.CODE_TEXT),
-                TextNode("", TextType.PLAIN_TEXT),
                 TextNode("SECOND_BLOCK", TextType.CODE_TEXT),
                 TextNode(" text node", TextType.PLAIN_TEXT),
             ],

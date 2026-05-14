@@ -28,11 +28,11 @@ def split_nodes_delimeter(old_nodes, delimeter, text_type):
             continue
         temp = node.text.split(delimeter)
         if len(temp) % 2 == 0:
-            raise Exception(f"missing closing delimeter in strin '{node.text}'")
+            raise Exception(f"missing closing delimeter in string '{node.text}'")
         for i in range(0, len(temp)):
-            if i % 2 == 0:
+            if i % 2 == 0 and len(temp[i]) != 0:
                 new_nodes.append(TextNode(temp[i], node.text_type))
-            else:
+            elif i % 2 != 0:
                 new_nodes.append(TextNode(temp[i], text_type))
 
     return new_nodes
@@ -46,3 +46,56 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
     matches = re.findall(r"(?<!\!)\[(.*?)\]\((.*?)\)", text)
     return matches
+
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        matches = extract_markdown_images(node.text)
+        if len(matches) == 0:
+            new_nodes.append(node)
+        else:
+            current = node.text
+            for image_alt, image_link in matches:
+                if len(current) == 0:
+                    continue
+                sections = current.split(f"![{image_alt}]({image_link})", 1)
+                current = sections[1]
+                if len(sections[0]) != 0:
+                    new_nodes.append(TextNode(sections[0], TextType.PLAIN_TEXT))
+                new_nodes.append(TextNode(image_alt, TextType.IMAGE_TEXT, image_link))
+            if len(current) != 0:
+                new_nodes.append(TextNode(current, TextType.PLAIN_TEXT))
+    return new_nodes
+
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        matches = extract_markdown_links(node.text)
+        if len(matches) == 0:
+            new_nodes.append(node)
+        else:
+            current = node.text
+            for link_alt, link_text in matches:
+                # if len(current) == 0:
+                #    continue
+                sections = current.split(f"[{link_alt}]({link_text})", 1)
+                current = sections[1]
+                if len(sections[0]) != 0:
+                    new_nodes.append(TextNode(sections[0], TextType.PLAIN_TEXT))
+                new_nodes.append(TextNode(link_alt, TextType.LINK_TEXT, link_text))
+            if len(current) != 0:
+                new_nodes.append(TextNode(current, TextType.PLAIN_TEXT))
+    return new_nodes
+
+
+def text_to_textnodes(text):
+    result_nodes = split_nodes_delimeter(
+        [TextNode(text, TextType.PLAIN_TEXT)], "`", TextType.CODE_TEXT
+    )
+    result_nodes = split_nodes_delimeter(result_nodes, "**", TextType.BOLD_TEXT)
+    result_nodes = split_nodes_delimeter(result_nodes, "_", TextType.ITALIC_TEXT)
+    result_nodes = split_nodes_image(result_nodes)
+    result_nodes = split_nodes_link(result_nodes)
+    return result_nodes
