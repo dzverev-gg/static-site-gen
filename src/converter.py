@@ -1,5 +1,5 @@
 from htmlnode import LeafNode
-from textnode import TextType
+from textnode import TextType, TextNode
 
 
 def text_node_to_html_node(text_node):
@@ -17,3 +17,21 @@ def text_node_to_html_node(text_node):
         return LeafNode("a", text_node.text, {"href": text_node.url})
     elif text_node.text_type == TextType.IMAGE_TEXT:
         return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+
+
+def split_nodes_delimeter(old_nodes, delimeter, text_type):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.PLAIN_TEXT:
+            new_nodes.append(node)
+            continue
+        temp = node.text.split(delimeter)
+        if len(temp) % 2 == 0:
+            raise Exception(f"missing closing delimeter in strin '{node.text}'")
+        for i in range(0, len(temp)):
+            if i % 2 == 0:
+                new_nodes.append(TextNode(temp[i], node.text_type))
+            else:
+                new_nodes.append(TextNode(temp[i], text_type))
+
+    return new_nodes
