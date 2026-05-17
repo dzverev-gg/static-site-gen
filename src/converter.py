@@ -3,7 +3,7 @@ from textnode import TextType, TextNode
 import re
 
 
-def text_node_to_html_node(text_node):
+def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     if text_node.text_type not in TextType:
         raise ValueError("TextType not in the range of known values")
     if text_node.text_type == TextType.PLAIN_TEXT:
@@ -20,7 +20,9 @@ def text_node_to_html_node(text_node):
         return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
 
 
-def split_nodes_delimeter(old_nodes, delimeter, text_type):
+def split_nodes_delimeter(
+    old_nodes: list[TextNode], delimeter: str, text_type: TextType
+):
     new_nodes = []
     for node in old_nodes:
         if node.text_type != TextType.PLAIN_TEXT:
@@ -90,7 +92,7 @@ def split_nodes_link(old_nodes):
     return new_nodes
 
 
-def text_to_textnodes(text):
+def text_to_textnodes(text) -> list[TextNode]:
     result_nodes = split_nodes_delimeter(
         [TextNode(text, TextType.PLAIN_TEXT)], "`", TextType.CODE_TEXT
     )
@@ -99,12 +101,3 @@ def text_to_textnodes(text):
     result_nodes = split_nodes_image(result_nodes)
     result_nodes = split_nodes_link(result_nodes)
     return result_nodes
-
-
-def markdown_to_blocks(markdown):
-    splitted = markdown.split("\n\n")
-    result = []
-    for line in splitted:
-        if len(line.strip()) != 0:
-            result.append(line.strip())
-    return result

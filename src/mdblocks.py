@@ -1,3 +1,4 @@
+import re
 from enum import Enum
 
 
@@ -10,23 +11,33 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
 
 
-def block_to_blocktype(block: str):
-    if (
-        block.startswith("# ")
-        or block.startswith("## ")
-        or block.startswith("### ")
-        or block.startswith("#### ")
-        or block.startswith("#####")
-        or block.startswith("######")
-    ):
+def block_to_blocktype(block: str) -> BlockType:
+    if re.match(r"^#{1,6} ", block):
         return BlockType.HEADING
-    elif block.startswith("```\n"):
+    if block.startswith("```\n"):
         return BlockType.CODE
-    elif block.startswith(">"):
+    if block.startswith(">"):
         return BlockType.QUOTE
-    elif block.startswith("- "):
+    if all(line.startswith("- ") for line in block.split("\n")):
         return BlockType.UNORDERED_LIST
-    elif block.startswith(". "):
-        return BlockType.ORDERED_LIST
-    else:
-        return BlockType.PARAGRAPH
+    if all(re.match(r"^\d+\. ", line) for line in block.split("\n")):
+        level = 1
+        ordered = True
+        for line in block.split("\n"):
+            if line.startswith(f"{level}"):
+                level += 1
+            else:
+                ordered = False
+        if ordered:
+            return BlockType.ORDERED_LIST
+
+    return BlockType.PARAGRAPH
+
+
+def markdown_to_blocks(markdown: str) -> list[str]:
+    splitted = markdown.split("\n\n")
+    result: list[str] = []
+    for line in splitted:
+        if len(line.strip()) != 0:
+            result.append(line.strip())
+    return result

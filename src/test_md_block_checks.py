@@ -3,7 +3,7 @@ from mdblocks import BlockType, block_to_blocktype
 import unittest
 
 
-class TestTextNode(unittest.TestCase):
+class TestMdBlockType(unittest.TestCase):
     def test_paragraph(self):
         self.assertEqual(
             BlockType.PARAGRAPH,
@@ -31,7 +31,14 @@ print("Hello World!")
 
     def test_ordered_list(self):
         self.assertEqual(
-            BlockType.ORDERED_LIST, block_to_blocktype(". this is an ordered list item")
+            BlockType.ORDERED_LIST,
+            block_to_blocktype("1. this is an ordered list item"),
+        )
+
+    def test_multyline_ordered(self):
+        self.assertEqual(
+            BlockType.ORDERED_LIST,
+            block_to_blocktype("1. first \n2. second\n3. third "),
         )
 
     def test_spaceless_list(self):

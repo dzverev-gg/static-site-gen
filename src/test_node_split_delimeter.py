@@ -4,7 +4,7 @@ from textnode import TextNode, TextType
 from converter import split_nodes_delimeter
 
 
-class TestTextNode(unittest.TestCase):
+class TestNodeSplitByDelimeter(unittest.TestCase):
     def test_text_with_code(self):
         node = TextNode("This is a `CODE_BLOCK` text node", TextType.PLAIN_TEXT)
         new_nodes = split_nodes_delimeter([node], "`", TextType.CODE_TEXT)

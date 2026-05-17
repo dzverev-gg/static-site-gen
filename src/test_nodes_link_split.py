@@ -4,7 +4,7 @@ from textnode import TextNode, TextType
 from converter import split_nodes_link
 
 
-class TestTextNode(unittest.TestCase):
+class TestLinkNodeSplit(unittest.TestCase):
     def test_split_link(self):
         node = TextNode(
             "This is text with an [link](https://i.imgur.com/index.html) and another [second link](https://google.com)",

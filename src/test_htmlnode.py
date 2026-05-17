@@ -3,7 +3,7 @@ import unittest
 from htmlnode import HTMLNode
 
 
-class TestTextNode(unittest.TestCase):
+class TestHtmlNode(unittest.TestCase):
     def test_tag_val(self):
         node = HTMLNode("TestTag", "TestValue", ["test1", "test2"], {"test": "dict"})
         self.assertEqual(node.tag, "TestTag")

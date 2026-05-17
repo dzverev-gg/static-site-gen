@@ -1,9 +1,9 @@
 import unittest
 
-from converter import markdown_to_blocks
+from mdblocks import markdown_to_blocks
 
 
-class TestTextNode(unittest.TestCase):
+class TestMdBlockSplit(unittest.TestCase):
     def test_markdown_to_blocks(self):
         md = """
 This is **bolded** paragraph

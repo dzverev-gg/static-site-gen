@@ -4,7 +4,7 @@ from textnode import TextNode, TextType
 from converter import split_nodes_image
 
 
-class TestTextNode(unittest.TestCase):
+class TestImageNodeSplit(unittest.TestCase):
     def test_split_images(self):
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",

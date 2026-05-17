@@ -4,7 +4,7 @@ from textnode import TextNode, TextType
 from converter import text_node_to_html_node
 
 
-class TestTextNode(unittest.TestCase):
+class TestHtmlTextConversion(unittest.TestCase):
     def test_text(self):
         node = TextNode("This is a text node", TextType.PLAIN_TEXT)
         html_node = text_node_to_html_node(node)
