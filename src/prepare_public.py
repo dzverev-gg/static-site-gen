@@ -2,20 +2,20 @@ import os
 import shutil
 
 
-def prepare_public():
-    if os.path.exists("./public/"):
-        shutil.rmtree("public")
-        print("Removed public")
+def prepare_struct(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+        print(f"Removed {path}")
 
-    os.mkdir("public")
-    print("Created public")
-    copy_static_to_public()
+    os.makedirs(path)
+    print(f"Created {path}")
+    copy_static_to_dst(path)
     return
 
 
-def copy_static_to_public(current_path: str = ""):
+def copy_static_to_dst(dst_path, current_path: str = ""):
     source_dir = os.path.join("static", current_path)
-    target_dir = os.path.join("public", current_path)
+    target_dir = os.path.join(dst_path, current_path)
     files = os.listdir(source_dir)
     for file in files:
         file_path = os.path.join(source_dir, file)
@@ -25,6 +25,6 @@ def copy_static_to_public(current_path: str = ""):
         else:
             os.mkdir(os.path.join(target_dir, file))
             print(f"Created folder {os.path.join(target_dir, file)}")
-            copy_static_to_public(os.path.join(current_path, file))
+            copy_static_to_dst(dst_path, os.path.join(current_path, file))
 
     return
