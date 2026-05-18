@@ -1,10 +1,10 @@
-from textnode import TextNode, TextType
-
+from prepare_public import prepare_public
+from generate_page import generate_pages_recursively
 
 
 def main():
-    print(TextNode("This is some anchor text", TextType.LINK_TEXT,"https://www.boot.dev"))
+    prepare_public()
+    generate_pages_recursively("content/", "template.html", "public/")
+
 
 main()
-
-

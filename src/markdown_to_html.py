@@ -19,7 +19,8 @@ def markdown_to_html_node(markdown: str):
             html_node = ParentNode(f"h{level}", text_to_children(content))
 
         if type == BlockType.QUOTE:
-            html_node = ParentNode("blockquote", text_to_children(block))
+            html_node = quote_to_html(block)
+            # html_node = ParentNode("blockquote", text_to_children(block))
 
         if type == BlockType.PARAGRAPH:
             content = ""
@@ -49,7 +50,7 @@ def unordered_list_to_html_node(text: str):
     list_nodes = []
     for line in text.split("- "):
         if len(line) > 0:
-            node = ParentNode("li", text_to_children(line))
+            node = ParentNode("li", text_to_children(line.strip()))
             list_nodes.append(node)
     return ParentNode("ul", list_nodes)
 
@@ -57,8 +58,9 @@ def unordered_list_to_html_node(text: str):
 def ordered_list_to_html_node(text: str):
     list_nodes = []
     for line in re.split(r"\d+\. ", text):
-        node = ParentNode("li", text_to_children(line))
-        list_nodes.append(node)
+        if len(line) > 0:
+            node = ParentNode("li", text_to_children(line.strip()))
+            list_nodes.append(node)
     return ParentNode("ol", list_nodes)
 
 
@@ -68,3 +70,20 @@ def text_to_children(text: str):
     for node in text_nodes:
         html_nodes.append(text_node_to_html_node(node))
     return html_nodes
+
+
+def quote_to_html(text):
+    result = ""
+    for line in re.split(r"^>", text, flags=re.MULTILINE):
+        if len(line) > 0:
+            result += line.strip(" ")
+
+    return ParentNode("blockquote", text_to_children(result))
+
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block.startswith("# "):
+            return block[1:].strip()
+    raise Exception("Provided markdown is does not have an h1 header")
