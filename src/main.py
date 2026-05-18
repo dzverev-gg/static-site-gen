@@ -9,10 +9,8 @@ def main():
     else:
         base_path = "/"
 
-    prepare_struct(f".{base_path}docs")
-    generate_pages_recursively(
-        "content/", "template.html", f".{base_path}docs", base_path
-    )
+    prepare_struct("docs/")
+    generate_pages_recursively("content/", "template.html", "docs/", base_path)
 
 
 main()
